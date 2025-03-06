@@ -7,7 +7,6 @@ const path = require('path');
     try {
 
         browser = await chromium.launch({
-            executablePath: path.resolve(process.argv[2]),
             headless: true,
             userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
             args: [
@@ -37,12 +36,12 @@ const path = require('path');
 
         const context = await browser.newContext();
         const page = await context.newPage();
-        await page.goto(process.argv[3]);
+        await page.goto(process.argv[2], { waitUntil: 'domcontentloaded', timeout: 30000 });
         const html = await page.evaluate("document.documentElement.innerHTML");
         console.log(html)
 
     } catch (error) {
-        console.log("Lo sentimos, no fue posible extraer el contenido de la página web. Esto puede deberse a restricciones en el sitio o a problemas de conexión. Por favor, intenta copiar y pegar el contenido manualmente para analizarlo.");
+        console.log("Lo sentimos, no fue posible extraer el contenido de la página web. Esto puede deberse a restricciones en el sitio o a problemas de conexión. Por favor, intenta copiar y pegar el contenido manualmente desde el sitio web para analizarlo.");
     } finally {
         if(browser) browser.close();
     }
